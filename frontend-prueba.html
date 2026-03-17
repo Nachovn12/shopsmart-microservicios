@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ShopSmart - Panel de Pruebas</title>
+    <style>
+        /* Estilos generales de la página */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        header {
+            background: #1a1a2e;
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        header h1 { font-size: 24px; }
+        header p  { font-size: 13px; color: #aaa; margin-top: 4px; }
+
+        .contenedor {
+            display: flex;
+            gap: 20px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Cada tarjeta representa un microservicio */
+        .tarjeta {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 320px;
+            overflow: hidden;
+        }
+
+        .tarjeta-header {
+            padding: 16px 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Color distinto por microservicio para diferenciarlo visualmente */
+        .inventario .tarjeta-header { background: #16213e; }
+        .pedidos     .tarjeta-header { background: #0f3460; }
+        .usuarios    .tarjeta-header { background: #533483; }
+
+        .estado-servidor {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .tarjeta-body { padding: 20px; }
+
+        /* Sección GET */
+        .seccion { margin-bottom: 20px; }
+        .seccion h3 {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.85; }
+
+        .btn-get  { background: #27ae60; color: white; }
+        .btn-post { background: #e67e22; color: white; }
+        .btn-limpiar { background: #95a5a6; color: white; font-weight: normal; font-size: 11px; padding: 5px 10px; }
+
+        /* Formularios del POST */
+        .formulario input {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .formulario input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Caja donde se muestra la respuesta JSON */
+        .respuesta {
+            background: #1e1e2e;
+            color: #a6e3a1;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 12px;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            min-height: 50px;
+        }
+
+        .respuesta.error { color: #f38ba8; }   /* rojo si hay error */
+        .respuesta.cargando { color: #89b4fa; } /* azul mientras carga */
+
+        .fila-botones {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .puerto-badge {
+            font-size: 11px;
+            background: rgba(255,255,255,0.15);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🛒 ShopSmart — Panel de Pruebas de Microservicios</h1>
+    <p>Asegúrate de tener los 3 servidores corriendo antes de usar este panel</p>
+</header>
+
+<div class="contenedor">
+
+    <!-- ======================== MICROSERVICIO 1: INVENTARIO ======================== -->
+    <div class="tarjeta inventario">
+        <div class="tarjeta-header">
+            📦 Microservicio de Inventario
+            <span class="puerto-badge">:8081</span>
+        </div>
+        <div class="tarjeta-body">
+
+            <!-- GET Productos -->
+            <div class="seccion">
+                <h3>GET — Consultar productos</h3>
+                <div class="fila-botones">
+                    <button class="btn-get" onclick="getProductos()">GET /api/productos</button>
+                    <button class="btn-limpiar" onclick="limpiar('res-get-productos')">Limpiar</button>
+                </div>
+                <div class="respuesta cargando" id="res-get-productos">Esperando petición...</div>
+            </div>
+
+            <!-- POST Producto -->
+            <div class="seccion">
+                <h3>POST — Agregar producto</h3>
+                <div class="formulario">
+                    <input type="text"   id="p-nombre"    placeholder="Nombre del producto" value="Silla Gamer Ergonómica">
+                    <input type="number" id="p-precio"    placeholder="Precio"              value="199990">
+                    <input type="number" id="p-stock"     placeholder="Stock disponible"    value="30">
+                    <input type="number" id="p-almacen"   placeholder="ID Almacén"          value="1">
+                </div>
+                <div class="fila-botones">
+                    <button class="btn-post" onclick="postProducto()">POST /api/productos</button>
+                    <button class="btn-limpiar" onclick="limpiar('res-post-producto')">Limpiar</button>
+                </div>
+                <div class="respuesta" id="res-post-producto">Esperando petición...</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ======================== MICROSERVICIO 2: PEDIDOS ======================== -->
+    <div class="tarjeta pedidos">
+        <div class="tarjeta-header">
+            🧾 Microservicio de Pedidos
+            <span class="puerto-badge">:8082</span>
+        </div>
+        <div class="tarjeta-body">
+
+            <!-- GET Pedidos -->
+            <div class="seccion">
+                <h3>GET — Consultar pedidos</h3>
+                <div class="fila-botones">
+                    <button class="btn-get" onclick="getPedidos()">GET /api/pedidos</button>
+                    <button class="btn-limpiar" onclick="limpiar('res-get-pedidos')">Limpiar</button>
+                </div>
+                <div class="respuesta cargando" id="res-get-pedidos">Esperando petición...</div>
+            </div>
+
+            <!-- POST Pedido -->
+            <div class="seccion">
+                <h3>POST — Crear pedido</h3>
+                <div class="formulario">
+                    <input type="number" id="ped-cliente"  placeholder="ID Cliente"   value="106">
+                    <input type="number" id="ped-producto" placeholder="ID Producto"  value="2">
+                    <input type="number" id="ped-cantidad" placeholder="Cantidad"     value="1">
+                    <input type="number" id="ped-total"    placeholder="Total ($)"    value="350000">
+                </div>
+                <div class="fila-botones">
+                    <button class="btn-post" onclick="postPedido()">POST /api/pedidos</button>
+                    <button class="btn-limpiar" onclick="limpiar('res-post-pedido')">Limpiar</button>
+                </div>
+                <div class="respuesta" id="res-post-pedido">Esperando petición...</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ======================== MICROSERVICIO 3: USUARIOS ======================== -->
+    <div class="tarjeta usuarios">
+        <div class="tarjeta-header">
+            👤 Microservicio de Usuarios
+            <span class="puerto-badge">:8083</span>
+        </div>
+        <div class="tarjeta-body">
+
+            <!-- GET Usuarios -->
+            <div class="seccion">
+                <h3>GET — Consultar usuarios</h3>
+                <div class="fila-botones">
+                    <button class="btn-get" onclick="getUsuarios()">GET /api/usuarios</button>
+                    <button class="btn-limpiar" onclick="limpiar('res-get-usuarios')">Limpiar</button>
+                </div>
+                <div class="respuesta cargando" id="res-get-usuarios">Esperando petición...</div>
+            </div>
+
+            <!-- POST Usuario -->
+            <div class="seccion">
+                <h3>POST — Registrar usuario</h3>
+                <div class="formulario">
+                    <input type="text"  id="u-nombre"   placeholder="Nombre completo" value="Diego Fuentes">
+                    <input type="email" id="u-email"    placeholder="Email"           value="diego@gmail.com">
+                    <input type="text"  id="u-telefono" placeholder="Teléfono"        value="+56955443322">
+                </div>
+                <div class="fila-botones">
+                    <button class="btn-post" onclick="postUsuario()">POST /api/usuarios</button>
+                    <button class="btn-limpiar" onclick="limpiar('res-post-usuario')">Limpiar</button>
+                </div>
+                <div class="respuesta" id="res-post-usuario">Esperando petición...</div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // URLs base de cada microservicio
+    const URL_INVENTARIO = 'http://localhost:8081';
+    const URL_PEDIDOS    = 'http://localhost:8085';
+    const URL_USUARIOS   = 'http://localhost:8086';
+
+    // Función genérica para mostrar el resultado JSON en la caja de respuesta
+    function mostrarRespuesta(idElemento, datos, esError = false) {
+        const caja = document.getElementById(idElemento);
+        caja.classList.remove('cargando', 'error');
+        if (esError) caja.classList.add('error');
+        // JSON.stringify con indentación de 2 espacios para que sea legible
+        caja.textContent = JSON.stringify(datos, null, 2);
+    }
+
+    // Función para limpiar una caja de respuesta
+    function limpiar(idElemento) {
+        const caja = document.getElementById(idElemento);
+        caja.classList.remove('error');
+        caja.classList.add('cargando');
+        caja.textContent = 'Esperando petición...';
+    }
+
+    // Función genérica para hacer GET a cualquier URL
+    async function hacerGet(url, idRespuesta) {
+        const caja = document.getElementById(idRespuesta);
+        caja.classList.add('cargando');
+        caja.textContent = 'Cargando...';
+        try {
+            const respuesta = await fetch(url);
+            const datos = await respuesta.json();
+            mostrarRespuesta(idRespuesta, datos);
+        } catch (error) {
+            // Si el servidor no está corriendo, muestra el error claramente
+            mostrarRespuesta(idRespuesta, {
+                error: 'No se pudo conectar al servidor',
+                detalle: 'Verifica que el microservicio esté corriendo con ./mvnw spring-boot:run',
+                url: url
+            }, true);
+        }
+    }
+
+    // Función genérica para hacer POST a cualquier URL con un cuerpo JSON
+    async function hacerPost(url, cuerpo, idRespuesta) {
+        const caja = document.getElementById(idRespuesta);
+        caja.classList.add('cargando');
+        caja.textContent = 'Enviando...';
+        try {
+            const respuesta = await fetch(url, {
+                method: 'POST',
+                // Este header es clave: le dice a Spring que el cuerpo es JSON
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cuerpo)
+            });
+            const datos = await respuesta.json();
+            mostrarRespuesta(idRespuesta, datos);
+        } catch (error) {
+            mostrarRespuesta(idRespuesta, {
+                error: 'No se pudo conectar al servidor',
+                detalle: 'Verifica que el microservicio esté corriendo con ./mvnw spring-boot:run',
+                url: url
+            }, true);
+        }
+    }
+
+    // ---- INVENTARIO ----
+    function getProductos() {
+        hacerGet(`${URL_INVENTARIO}/api/productos`, 'res-get-productos');
+    }
+
+    function postProducto() {
+        const cuerpo = {
+            nombre:    document.getElementById('p-nombre').value,
+            precio:    parseFloat(document.getElementById('p-precio').value),
+            stock:     parseInt(document.getElementById('p-stock').value),
+            idAlmacen: parseInt(document.getElementById('p-almacen').value)
+        };
+        hacerPost(`${URL_INVENTARIO}/api/productos`, cuerpo, 'res-post-producto');
+    }
+
+    // ---- PEDIDOS ----
+    function getPedidos() {
+        hacerGet(`${URL_PEDIDOS}/api/pedidos`, 'res-get-pedidos');
+    }
+
+    function postPedido() {
+        const cuerpo = {
+            idCliente:  parseInt(document.getElementById('ped-cliente').value),
+            idProducto: parseInt(document.getElementById('ped-producto').value),
+            cantidad:   parseInt(document.getElementById('ped-cantidad').value),
+            total:      parseFloat(document.getElementById('ped-total').value)
+        };
+        hacerPost(`${URL_PEDIDOS}/api/pedidos`, cuerpo, 'res-post-pedido');
+    }
+
+    // ---- USUARIOS ----
+    function getUsuarios() {
+        hacerGet(`${URL_USUARIOS}/api/usuarios`, 'res-get-usuarios');
+    }
+
+    function postUsuario() {
+        const cuerpo = {
+            nombre:   document.getElementById('u-nombre').value,
+            email:    document.getElementById('u-email').value,
+            telefono: document.getElementById('u-telefono').value
+        };
+        hacerPost(`${URL_USUARIOS}/api/usuarios`, cuerpo, 'res-post-usuario');
+    }
+</script>
+
+</body>
+</html>
