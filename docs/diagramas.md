@@ -1,7 +1,7 @@
 # Diagramas de Arquitectura - ShopSmart
 
 ## Sistema Completo
-![Arquitectura completa](arquitectura-completa.png)
+![Arquitectura completa](Arquitectura-Completa.png)
 
 ## Inventory Service (Puerto 8081)
 ![Inventory Service](Inventory-service.png)
