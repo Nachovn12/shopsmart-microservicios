@@ -39,7 +39,7 @@ public class PedidoController {
             
             // 1. Validar si existe el usuario consultando al microservicio de usuarios (8083)
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> usuarios = restTemplate.getForObject("http://localhost:8083/api/usuarios", List.class);
+            List<Map<String, Object>> usuarios = restTemplate.getForObject("http://localhost:8085/api/usuarios", List.class);
             boolean clienteExiste = false;
             if (usuarios != null) {
                 for (Map<String, Object> u : usuarios) {

@@ -17,7 +17,6 @@ public class Producto {
         this.idAlmacen = idAlmacen;
     }
 
-    // constructor vacio que pide spring para el @RequestBody
     public Producto() {}
 
     public Long getId() {

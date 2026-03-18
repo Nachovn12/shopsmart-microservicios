@@ -2,258 +2,194 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ShopSmart - Panel de Pruebas</title>
+    <title>ShopSmart - Panel FullStack</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
+        /* Configuración General */
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; padding: 20px; color: #333; }
+        h1 { text-align: center; color: #1a2a6c; margin-bottom: 30px; }
+        
+        .contenedor { 
+            display: flex; 
+            gap: 25px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            align-items: flex-start;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 5px;
+        /* Tarjetas de Microservicios */
+        .tarjeta { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 20px; 
+            width: 360px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-top: 5px solid #ccc;
         }
+        .inv-border { border-top-color: #2ecc71; } /* Verde */
+        .ped-border { border-top-color: #3498db; } /* Azul */
+        .usr-border { border-top-color: #9b59b6; } /* Morado */
 
-        p.subtitulo {
-            text-align: center;
-            color: gray;
-            margin-bottom: 30px;
-            font-size: 14px;
+        h2 { font-size: 1.1rem; margin-top: 0; display: flex; justify-content: space-between; }
+        .puerto { font-size: 0.8rem; color: #777; background: #eee; padding: 2px 8px; border-radius: 10px; }
+
+        /* Inputs y Botones */
+        label { display: block; font-size: 11px; font-weight: bold; color: #666; margin-top: 8px; }
+        input { 
+            width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ddd; 
+            border-radius: 5px; box-sizing: border-box; font-size: 13px;
         }
-
-        .contenedor {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
+        button { 
+            width: 100%; padding: 10px; margin-top: 12px; cursor: pointer; 
+            border: none; border-radius: 5px; font-weight: bold; transition: 0.3s;
         }
+        .btn-get { background: #f8f9fa; border: 1px solid #ddd; color: #333; margin-bottom: 5px; }
+        .btn-get:hover { background: #e9ecef; }
+        .btn-post { background: #2c3e50; color: white; }
+        .btn-post:hover { background: #1a252f; }
 
-        .tarjeta {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: 320px;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        /* Visor de JSON Optimizado para listas grandes */
+        .respuesta { 
+            background: #1e1e1e; 
+            color: #a8ff78; 
+            padding: 12px; 
+            margin-top: 15px; 
+            font-family: 'Consolas', monospace; 
+            font-size: 12px; 
+            border-radius: 6px;
+            
+            /* Scroll mágico */
+            height: 250px; 
+            overflow-y: auto; 
+            overflow-x: auto;
+            white-space: pre; /* Mantiene la estructura del JSON */
+            border: 1px solid #333;
         }
+        .error { color: #ff6b6b; border-color: #ff6b6b; }
 
-        .tarjeta h2 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #eee;
-        }
-
-        /* colores distintos para cada servicio */
-        .inventario h2 { color: #2ecc71; }
-        .pedidos h2    { color: #3498db; }
-        .usuarios h2   { color: #9b59b6; }
-
-        .tarjeta h3 {
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 8px;
-        }
-
-        .tarjeta input {
-            width: 100%;
-            padding: 7px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-
-        .tarjeta button {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-right: 5px;
-            margin-bottom: 8px;
-        }
-
-        .btn-get  { background-color: #2ecc71; color: white; }
-        .btn-post { background-color: #e67e22; color: white; }
-        .btn-limpiar { background-color: #bdc3c7; color: white; }
-
-        /* caja donde aparece el json de respuesta */
-        .respuesta {
-            background: #2d2d2d;
-            color: #a8ff78;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            min-height: 60px;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 8px;
-        }
-
-        .respuesta.error {
-            color: #ff6b6b;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #eee;
-            margin: 15px 0;
-        }
+        hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-<h1>ShopSmart - Panel de Pruebas de Microservicios</h1>
-<p class="subtitulo">Actividad 1.1.2 - DSY1106 Desarrollo Fullstack III</p>
+<h1>ShopSmart - Control de Microservicios</h1>
 
 <div class="contenedor">
 
-    <!-- INVENTARIO -->
-    <div class="tarjeta inventario">
-        <h2>Inventario (:8081)</h2>
-
-        <h3>GET - Ver productos</h3>
-        <button class="btn-get" onclick="getProductos()">GET /api/productos</button>
-        <button class="btn-limpiar" onclick="limpiar('res-get-productos')">Limpiar</button>
-        <div class="respuesta" id="res-get-productos">Sin respuesta aun...</div>
-
+    <div class="tarjeta inv-border">
+        <h2>Inventario <span class="puerto">:8081</span></h2>
+        <button class="btn-get" onclick="getInventario()">Listar Productos (GET)</button>
+        <div class="respuesta" id="res-get-inv">[]</div>
         <hr>
-
-        <h3>POST - Agregar producto</h3>
-        <input type="text"   id="p-nombre"  placeholder="Nombre" value="Silla Gamer">
-        <input type="number" id="p-precio"  placeholder="Precio" value="199990">
-        <input type="number" id="p-stock"   placeholder="Stock"  value="30">
-        <input type="number" id="p-almacen" placeholder="ID Almacen" value="1">
-        <button class="btn-post" onclick="postProducto()">POST /api/productos</button>
-        <button class="btn-limpiar" onclick="limpiar('res-post-producto')">Limpiar</button>
-        <div class="respuesta" id="res-post-producto">Sin respuesta aun...</div>
+        <label>Nombre Producto</label>
+        <input type="text" id="p-nombre" value="Silla Gamer">
+        <label>Precio</label>
+        <input type="number" id="p-precio" value="150000">
+        <label>Stock</label>
+        <input type="number" id="p-stock" value="20">
+        <label>ID Almacén</label>
+        <input type="number" id="p-almacen" value="1">
+        <button class="btn-post" onclick="postInventario()">Guardar Producto (POST)</button>
     </div>
 
-    <!-- PEDIDOS -->
-    <div class="tarjeta pedidos">
-        <h2>Pedidos (:8082)</h2>
-
-        <h3>GET - Ver pedidos</h3>
-        <button class="btn-get" onclick="getPedidos()">GET /api/pedidos</button>
-        <button class="btn-limpiar" onclick="limpiar('res-get-pedidos')">Limpiar</button>
-        <div class="respuesta" id="res-get-pedidos">Sin respuesta aun...</div>
-
+    <div class="tarjeta ped-border">
+        <h2>Pedidos <span class="puerto">:8084</span></h2>
+        <button class="btn-get" onclick="getPedidos()">Listar Pedidos (GET)</button>
+        <div class="respuesta" id="res-get-ped">[]</div>
         <hr>
-
-        <h3>POST - Crear pedido</h3>
-        <input type="number" id="ped-cliente"  placeholder="ID Cliente"  value="106">
-        <input type="number" id="ped-producto" placeholder="ID Producto" value="2">
-        <input type="number" id="ped-cantidad" placeholder="Cantidad"    value="1">
-        <input type="number" id="ped-total"    placeholder="Total"       value="350000">
-        <button class="btn-post" onclick="postPedido()">POST /api/pedidos</button>
-        <button class="btn-limpiar" onclick="limpiar('res-post-pedido')">Limpiar</button>
-        <div class="respuesta" id="res-post-pedido">Sin respuesta aun...</div>
+        <label>ID Cliente</label>
+        <input type="number" id="ped-cliente" value="6">
+        <label>ID Producto</label>
+        <input type="number" id="ped-producto" value="2">
+        <label>Cantidad</label>
+        <input type="number" id="ped-cantidad" value="1">
+        <label>Total Pago</label>
+        <input type="number" id="ped-total" value="350000">
+        <button class="btn-post" onclick="postPedido()">Crear Pedido (POST)</button>
     </div>
 
-    <!-- USUARIOS -->
-    <div class="tarjeta usuarios">
-        <h2>Usuarios (:8083)</h2>
-
-        <h3>GET - Ver usuarios</h3>
-        <button class="btn-get" onclick="getUsuarios()">GET /api/usuarios</button>
-        <button class="btn-limpiar" onclick="limpiar('res-get-usuarios')">Limpiar</button>
-        <div class="respuesta" id="res-get-usuarios">Sin respuesta aun...</div>
-
+    <div class="tarjeta usr-border">
+        <h2>Usuarios <span class="puerto">:8085</span></h2>
+        <button class="btn-get" onclick="getUsuarios()">Listar Usuarios (GET)</button>
+        <div class="respuesta" id="res-get-usr">[]</div>
         <hr>
-
-        <h3>POST - Registrar usuario</h3>
-        <input type="text"  id="u-nombre"   placeholder="Nombre"   value="Diego Fuentes">
-        <input type="email" id="u-email"    placeholder="Email"    value="diego@gmail.com">
-        <input type="text"  id="u-telefono" placeholder="Telefono" value="+56955443322">
-        <button class="btn-post" onclick="postUsuario()">POST /api/usuarios</button>
-        <button class="btn-limpiar" onclick="limpiar('res-post-usuario')">Limpiar</button>
-        <div class="respuesta" id="res-post-usuario">Sin respuesta aun...</div>
+        <label>Nombre Completo</label>
+        <input type="text" id="u-nombre" value="Sofia Torres">
+        <label>Email</label>
+        <input type="email" id="u-email" value="sofia@gmail.com">
+        <label>Teléfono</label>
+        <input type="text" id="u-telefono" value="+56933445566">
+        <button class="btn-post" onclick="postUsuario()">Registrar Usuario (POST)</button>
     </div>
 
 </div>
 
 <script>
-    const URL_INVENTARIO = 'http://localhost:8081';
-    const URL_PEDIDOS = 'http://localhost:8082';
-    const URL_USUARIOS = 'http://localhost:8083';
+    // URLs de los Microservicios
+    const API_INV = "http://localhost:8081/api/productos";
+    const API_PED = "http://localhost:8084/api/pedidos";
+    const API_USR = "http://localhost:8085/api/usuarios";
 
-    function limpiar(id) {
-        document.getElementById(id).textContent = 'Sin respuesta aun...';
-        document.getElementById(id).classList.remove('error');
-    }
+    // Función Maestra para Fetch
+    async function ejecutar(url, metodo, cuerpo, idRespuesta) {
+        const visor = document.getElementById(idRespuesta);
+        visor.textContent = "Procesando...";
+        visor.classList.remove("error");
 
-    async function hacerGet(url, id) {
-        document.getElementById(id).textContent = 'Cargando...';
+        const options = {
+            method: metodo,
+            headers: { "Content-Type": "application/json" }
+        };
+        if (cuerpo) options.body = JSON.stringify(cuerpo);
+
         try {
-            const res = await fetch(url);
+            const res = await fetch(url, options);
             const data = await res.json();
-            document.getElementById(id).textContent = JSON.stringify(data, null, 2);
-        } catch (e) {
-            document.getElementById(id).textContent = 'Error: no se pudo conectar al servidor\nVerifica que el microservicio este corriendo';
-            document.getElementById(id).classList.add('error');
+            
+            if (!res.ok) {
+                visor.classList.add("error");
+                visor.textContent = `Error ${res.status}:\n${JSON.stringify(data, null, 2)}`;
+            } else {
+                visor.textContent = JSON.stringify(data, null, 2);
+            }
+        } catch (err) {
+            visor.classList.add("error");
+            visor.textContent = "Error: No se pudo conectar.\n¿Está activo el microservicio?";
         }
     }
 
-    async function hacerPost(url, body, id) {
-        document.getElementById(id).textContent = 'Enviando...';
-        try {
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            const data = await res.json();
-            document.getElementById(id).textContent = JSON.stringify(data, null, 2);
-        } catch (e) {
-            document.getElementById(id).textContent = 'Error: no se pudo conectar al servidor';
-            document.getElementById(id).classList.add('error');
-        }
-    }
-
-    function getProductos() {
-        hacerGet(URL_INVENTARIO + '/api/productos', 'res-get-productos');
-    }
-
-    function postProducto() {
-        const body = {
+    // Funciones Inventario
+    function getInventario() { ejecutar(API_INV, 'GET', null, 'res-get-inv'); }
+    function postInventario() {
+        const data = {
             nombre: document.getElementById('p-nombre').value,
-            precio: parseFloat(document.getElementById('p-precio').value),
-            stock: parseInt(document.getElementById('p-stock').value),
-            idAlmacen: parseInt(document.getElementById('p-almacen').value)
+            precio: Number(document.getElementById('p-precio').value),
+            stock: Number(document.getElementById('p-stock').value),
+            idAlmacen: Number(document.getElementById('p-almacen').value)
         };
-        hacerPost(URL_INVENTARIO + '/api/productos', body, 'res-post-producto');
+        ejecutar(API_INV, 'POST', data, 'res-get-inv');
     }
 
-    function getPedidos() {
-        hacerGet(URL_PEDIDOS + '/api/pedidos', 'res-get-pedidos');
-    }
-
+    // Funciones Pedidos
+    function getPedidos() { ejecutar(API_PED, 'GET', null, 'res-get-ped'); }
     function postPedido() {
-        const body = {
-            idCliente: parseInt(document.getElementById('ped-cliente').value),
-            idProducto: parseInt(document.getElementById('ped-producto').value),
-            cantidad: parseInt(document.getElementById('ped-cantidad').value),
-            total: parseFloat(document.getElementById('ped-total').value)
+        const data = {
+            idCliente: Number(document.getElementById('ped-cliente').value),
+            idProducto: Number(document.getElementById('ped-producto').value),
+            cantidad: Number(document.getElementById('ped-cantidad').value),
+            total: Number(document.getElementById('ped-total').value)
         };
-        hacerPost(URL_PEDIDOS + '/api/pedidos', body, 'res-post-pedido');
+        ejecutar(API_PED, 'POST', data, 'res-get-ped');
     }
 
-    function getUsuarios() {
-        hacerGet(URL_USUARIOS + '/api/usuarios', 'res-get-usuarios');
-    }
-
+    // Funciones Usuarios
+    function getUsuarios() { ejecutar(API_USR, 'GET', null, 'res-get-usr'); }
     function postUsuario() {
-        const body = {
+        const data = {
             nombre: document.getElementById('u-nombre').value,
             email: document.getElementById('u-email').value,
             telefono: document.getElementById('u-telefono').value
         };
-        hacerPost(URL_USUARIOS + '/api/usuarios', body, 'res-post-usuario');
+        ejecutar(API_USR, 'POST', data, 'res-get-usr');
     }
 </script>
 
