@@ -5,9 +5,12 @@ import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
+
+    // sin esto el navegador bloquea las peticiones del html
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // Permite que el archivo HTML del navegador se comunique con este servidor
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST");
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST");
     }
 }

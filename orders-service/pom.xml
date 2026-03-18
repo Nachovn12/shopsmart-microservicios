@@ -11,8 +11,8 @@
 	<groupId>com.shopsmart</groupId>
 	<artifactId>orders-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>orders-service</name>
+	<description>API de pedidos</description>
 	<url/>
 	<licenses>
 		<license/>
